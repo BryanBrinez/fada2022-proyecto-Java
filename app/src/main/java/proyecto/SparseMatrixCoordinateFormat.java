@@ -23,6 +23,9 @@ public class SparseMatrixCoordinateFormat {
     @Setter
     private int[] values;
 
+    private int tamFilas;
+    private int tamCol;
+
     public void createRepresentation(String inputFile) throws OperationNotSupportedException, FileNotFoundException {
         //Load data
         loader.loadFile(inputFile);
@@ -32,9 +35,13 @@ public class SparseMatrixCoordinateFormat {
         ArrayList<Integer> col = new ArrayList<Integer>();
 
 
+        tamFilas =matrix.length;
+
         //sacar los values de
         for (int i = 0; i < matrix.length; i++) {
+
             for (int j = 0; j < matrix[i].length; j++) {
+                tamCol = matrix[i].length;
 
                 if (matrix[i][j] != 0) {
                     valores.add(matrix[i][j]);
@@ -77,34 +84,63 @@ public class SparseMatrixCoordinateFormat {
 
     public int getElement(int fila, int columna) throws OperationNotSupportedException {
         //No usar this.matrix aqui.
+        boolean dato = false;
 
+        for (int i = 0; i < rows.length; i++){
+            if(this.rows[i] == fila && this.columns[i] == columna){
+                dato = true;
+               return this.values[i];
+            }
+        }
+        if(dato==false){
+            return 0;
+        }
 
-        for (int i = 0; i < this.rows.length; i++){
-            if(this.rows[i] ==  fila ){
-                for (int j = 0; j < this.columns.length; i++){
-                    if (this.columns[j] == columna){
-                        return this.values[j];
-                    }
+        throw new OperationNotSupportedException();
+    }
 
-                }
+    public int[] getRow(int fila) throws OperationNotSupportedException {
+        //No usar this.matrix aqui.
+
+        ArrayList<Integer> filas = new ArrayList<Integer>();
+        ArrayList<Integer> res = new ArrayList<Integer>(tamCol);
+
+        int resul[] = new int[tamCol];
+
+        for (int i = 0; i < resul.length; i++){
+            resul[i] = 0;
+        }
+
+        for (int i = 0; i < rows.length; i++){
+            if(this.rows[i] == fila){
+                filas.add(this.columns[i]);
             }
 
         }
+        for (int i = 0; i < tamCol; i++){
+            for (Integer elemento : filas){
+                if(i == elemento){
+                    resul[i] = this.getElement(fila,elemento);
+                }
+            }
+        }
 
-
-
-        throw new OperationNotSupportedException();
+        return resul;
     }
 
-    public int[] getRow(int i) throws OperationNotSupportedException {
+    public int[] getColumn(int columnas) throws OperationNotSupportedException {
         //No usar this.matrix aqui.
-        throw new OperationNotSupportedException();
+
+        ArrayList<Integer> filas = new ArrayList<Integer>();
+        ArrayList<Integer> res = new ArrayList<Integer>(8);
+
+        int resul[] = new int[tamFilas];
+
+        return resul;
     }
 
-    public int[] getColumn(int j) throws OperationNotSupportedException {
-        //No usar this.matrix aqui.
-        throw new OperationNotSupportedException();
-    }
+
+
 
     public void setValue(int i, int j, int value) throws OperationNotSupportedException {
         //Cambiar los atributos rows, cols, values y matrix aqui
