@@ -115,8 +115,8 @@ public class SparseMatrixCoordinateFormat {
             if(this.rows[i] == fila){
                 filas.add(this.columns[i]);
             }
-
         }
+
         for (int i = 0; i < tamCol; i++){
             for (Integer elemento : filas){
                 if(i == elemento){
@@ -128,23 +128,41 @@ public class SparseMatrixCoordinateFormat {
         return resul;
     }
 
-    public int[] getColumn(int columnas) throws OperationNotSupportedException {
+    public int[] getColumn(int columna) throws OperationNotSupportedException {
         //No usar this.matrix aqui.
 
-        ArrayList<Integer> filas = new ArrayList<Integer>();
+        ArrayList<Integer> columnas = new ArrayList<Integer>();
         ArrayList<Integer> res = new ArrayList<Integer>(8);
 
         int resul[] = new int[tamFilas];
 
+        for (int i = 0; i < resul.length; i++){
+            resul[i] = 0;
+        }
+
+        for (int i = 0; i < rows.length; i++){
+            if(columns[i] == columna){
+                columnas.add(this.rows[i]);
+            }
+        }
+
+        for (int i = 0; i < resul.length; i++){
+            for (Integer elemento : columnas){
+                if(i == elemento){
+                    resul[i] = this.getElement(elemento,columna);
+                }
+            }
+
+        }
+
         return resul;
     }
 
-
-
-
     public void setValue(int i, int j, int value) throws OperationNotSupportedException {
         //Cambiar los atributos rows, cols, values y matrix aqui
+
         throw new OperationNotSupportedException();
+
     }
 
     /*
@@ -154,7 +172,16 @@ public class SparseMatrixCoordinateFormat {
     public SparseMatrixCoordinateFormat getSquareMatrix() throws OperationNotSupportedException {
         SparseMatrixCoordinateFormat squaredMatrix = new SparseMatrixCoordinateFormat();
         //Usar los metodos Set aqui de los atributos
-        throw new OperationNotSupportedException();
+
+
+        for (int i = 0; i < this.rows.length; i++) {
+            this.values[i] = this.values[i] * this.values[i];
+        }
+
+        squaredMatrix.setRows(this.rows);
+        squaredMatrix.setColumns(this.columns);
+        squaredMatrix.setValues(this.values);
+        return squaredMatrix;
     }
 
     /*
