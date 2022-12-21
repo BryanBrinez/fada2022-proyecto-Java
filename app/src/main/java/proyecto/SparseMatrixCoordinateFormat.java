@@ -190,8 +190,48 @@ public class SparseMatrixCoordinateFormat {
      */
     public SparseMatrixCoordinateFormat getTransposedMatrix() throws OperationNotSupportedException {
         SparseMatrixCoordinateFormat squaredMatrix = new SparseMatrixCoordinateFormat();
-        //Usar los metodos Set aqui de los atributos
-        throw new OperationNotSupportedException();
+
+        int[][] newmat = new int[matrix[0].length][matrix.length];
+
+        for (int j = 0; j < matrix[0].length; j++) {
+            for (int i = 0; i < matrix.length; i++) {
+                newmat[j][i] = matrix[i][j];
+            }
+        }
+        squaredMatrix.setMatrix(newmat);
+
+        // Contamos el número de elementos no nulos en la matriz transpuesta
+        int numNonZeroElements = 0;
+        for (int[] filas : newmat) {
+            for (int elemento : filas) {
+                if (elemento != 0) {
+                    numNonZeroElements++;
+                }
+            }
+        }
+
+        // Creamos los arrays con las capacidades correspondientes
+        int[] nuevasfilas = new int[numNonZeroElements];
+        int[] nuevasColumnas = new int[numNonZeroElements];
+        int[] nuevosValores = new int[numNonZeroElements];
+
+        // Rellenamos los arrays con los datos de la matriz transpuesta
+        int index = 0;
+        for (int i = 0; i < newmat.length; i++) {
+            for (int j = 0; j < newmat[0].length; j++) {
+                if (newmat[i][j] != 0) {
+                    nuevasfilas[index] = i;
+                    nuevasColumnas[index] = j;
+                    nuevosValores[index] = newmat[i][j];
+                    index++;
+                }
+            }
+        }
+        squaredMatrix.setRows(nuevasfilas);
+        squaredMatrix.setColumns(nuevasColumnas);
+        squaredMatrix.setValues(nuevosValores);
+
+        return squaredMatrix;
     }
 
 }
