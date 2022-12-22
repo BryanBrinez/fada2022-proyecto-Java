@@ -3,12 +3,7 @@ package proyecto;
 import javax.naming.OperationNotSupportedException;
 import lombok.Getter;
 import lombok.Setter;
-
-
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 public class SparseMatrixCSC {
     private LoadFile loader = LoadFile.getInstance();
@@ -22,9 +17,8 @@ public class SparseMatrixCSC {
     @Getter
     @Setter
     private int[] values;
-    private int numRows, numCols;
-
-
+    private int numRows;
+    private int numCols;
     public void createRepresentation(String inputFile) throws OperationNotSupportedException, FileNotFoundException {
         // Load data
         loader.loadFile(inputFile);

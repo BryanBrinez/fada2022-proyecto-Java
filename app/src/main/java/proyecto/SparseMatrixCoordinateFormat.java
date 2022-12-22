@@ -39,7 +39,7 @@ public class SparseMatrixCoordinateFormat {
 
 
         //tam de las filas
-        tamFilas =matrix.length;
+        tamFilas = matrix.length;
 
         //recorrer la matrix
         for (int i = 0; i < matrix.length; i++) {
@@ -64,16 +64,13 @@ public class SparseMatrixCoordinateFormat {
         values = new  int[valores.size()];
         rows = new  int[valores.size()];
         columns = new  int[valores.size()];
-
-
         //Pasa de los arraylist a los arrays resultados
-        for (int i = 0; i < values.length; i++){
+        for (int i = 0; i < values.length; i++) {
             values[i] = valores.get(i);
 
             rows[i] = fil.get(i);
 
             columns[i] = col.get(i);
-
         }
 
     }
@@ -85,9 +82,9 @@ public class SparseMatrixCoordinateFormat {
 
 
         //Recorre las filas
-        for (int i = 0; i < rows.length; i++){
+        for (int i = 0; i < rows.length; i++) {
             //Comprueba si son iguales a la busqueda
-            if(this.rows[i] == fila && this.columns[i] == columna){
+            if  (this.rows[i] == fila && this.columns[i] == columna) {
                return this.values[i];
             }
         }
@@ -103,22 +100,22 @@ public class SparseMatrixCoordinateFormat {
 
         //Crea un array de ceros
         int resul[] = new int[tamCol];
-        for (int i = 0; i < resul.length; i++){
+        for (int i = 0; i < resul.length; i++) {
             resul[i] = 0;
         }
 
         //guarda las posiciones de la columna donde row sea igual a la fila
-        for (int i = 0; i < rows.length; i++){
-            if(this.rows[i] == fila){
+        for (int i = 0; i < rows.length; i++) {
+            if (this.rows[i] == fila) {
                 filas.add(this.columns[i]);
             }
         }
 
         //guarda el elemento donde la posicion de su columna sea igual al recorrido
-        for (int i = 0; i < resul.length; i++){
-            for (Integer elemento : filas){
-                if(i == elemento){
-                    resul[i] = this.getElement(fila,elemento);
+        for (int i = 0; i < resul.length; i++) {
+            for (Integer elemento : filas) {
+                if (i == elemento) {
+                    resul[i] = this.getElement(fila, elemento);
                 }
             }
         }
@@ -135,22 +132,22 @@ public class SparseMatrixCoordinateFormat {
 
         //Crea un array de ceros
         int resul[] = new int[tamFilas];
-        for (int i = 0; i < resul.length; i++){
+        for (int i = 0; i < resul.length; i++) {
             resul[i] = 0;
         }
 
         //guarda las posiciones de la fila donde row sea igual a la columna
-        for (int i = 0; i < rows.length; i++){
-            if(columns[i] == columna){
+        for (int i = 0; i < rows.length; i++) {
+            if (columns[i] == columna) {
                 columnas.add(this.rows[i]);
             }
         }
 
         //guarda el elemento donde la posicion de su fila sea igual al recorrido
-        for (int i = 0; i < resul.length; i++){
-            for (Integer elemento : columnas){
-                if(i == elemento){
-                    resul[i] = this.getElement(elemento,columna);
+        for (int i = 0; i < resul.length; i++) {
+            for (Integer elemento : columnas) {
+                if (i == elemento) {
+                    resul[i] = this.getElement(elemento, columna);
                 }
             }
 

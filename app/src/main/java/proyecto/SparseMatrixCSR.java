@@ -3,11 +3,7 @@ package proyecto;
 import javax.naming.OperationNotSupportedException;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Arrays;
-import java.util.stream.IntStream;
-import java.util.ArrayList;
-
 import java.io.FileNotFoundException;
 
 public class SparseMatrixCSR {
@@ -23,8 +19,8 @@ public class SparseMatrixCSR {
     @Setter
     private int[] values;
 
-    private int numRows, numCols;
-
+    private int numRows;
+    private int numCols;
     public void createRepresentation(String inputFile) throws OperationNotSupportedException, FileNotFoundException {
         //Load data
         loader.loadFile(inputFile);
@@ -121,14 +117,14 @@ public class SparseMatrixCSR {
     public void setValue(int i, int j, int value) throws OperationNotSupportedException
     {
         int inicio = rows[i];
-        int fin = rows[i+1]-1;
+        int fin = rows[i + 1] - 1;
 
         int[] newColumns = new int[columns.length + 1];
         int[] newValues = new int[values.length + 1];
 
         //para el caso donde inicio > fin
         //Significa que no hay valores diferentes a cero en esa fila
-        if(fin < inicio){
+        if (fin < inicio) {
             //Se copia los valores desde el inicio hasta la nueva posicion
             for (int l = 0; l < inicio; l++) {
                 newColumns[l] = columns[l];
@@ -139,26 +135,26 @@ public class SparseMatrixCSR {
             newValues[inicio] = value;
             //Se copian el resto de valores
             for (int l = inicio; l < values.length; l++) {
-                newColumns[l+1] = columns[l];
-                newValues[l+1] = values[l];
+                newColumns[l + 1] =   columns[l];
+                newValues[l + 1] = values[l];
             }
             //Se redefinen las columnas y los valores
             columns = newColumns;
             values = newValues;
             //se suma 1 a los valores en adelante para las filas
-            for (int l = i+1; l < rows.length; l++) {
-                rows[l] ++;
+            for (int l = i + 1; l < rows.length; l++) {
+                rows[l]++;
             }
 
         }
 
-        for(int k = inicio; k <= fin; k++){
+        for (int k = inicio; k <= fin; k++) {
             //Busca si el indice ya existe,
             //en este caso solo se redefine el valor almacenado
-            if(columns[k] == j){
+            if (columns[k] == j) {
                 values[k] = value;
                 break;
-            } else if(columns[k] > j){
+            } else if (columns[k] > j) {
                 //Se copian los valores hasta la posicion k-1
                 for (int l = 0; l < k; l++) {
                     newColumns[l] = columns[l];
@@ -169,39 +165,39 @@ public class SparseMatrixCSR {
                 newValues[k] = value;
                 //Se copian el resto de valores
                 for (int l = k; l < values.length; l++) {
-                    newColumns[l+1] = columns[l];
-                    newValues[l+1] = values[l];
+                    newColumns[l + 1] = columns[l];
+                    newValues[l + 1] = values[l];
                 }
                 //Se redefinen las columnas y los valores
                 columns = newColumns;
                 values = newValues;
                 //se suma 1 a los valores en adelante para las filas
-                for (int l = i+1; l < rows.length; l++) {
-                    rows[l] ++;
+                for (int l = i + 1; l < rows.length; l++) {
+                    rows[l]++;
                 }
                 break;
-            } else if(k == fin){
+            } else if (k == fin) {
                 //Se copian los valores hasta la posicion k-1
                 for (int l = 0; l <= k; l++) {
                     newColumns[l] = columns[l];
                     newValues[l] = values[l];
                 }
                 //se inserta el nuevo valor
-                newColumns[k+1] = j;
-                newValues[k+1] = value;
+                newColumns[k + 1] = j;
+                newValues[k + 1] = value;
 
                 //Se copian el resto de valores
-                for (int l = k+1; l < values.length; l++) {
-                    newColumns[l+1] = columns[l];
-                    newValues[l+1] = values[l];
+                for (int l = k + 1; l < values.length; l++) {
+                    newColumns[l + 1] = columns[l];
+                    newValues[l + 1] = values[l];
                 }
 
                 //Se redefinen las columnas y los valores
                 columns = newColumns;
                 values = newValues;
                 //se suma 1 a los valores en adelante para las filas
-                for (int l = i+1; l < rows.length; l++) {
-                    rows[l] ++;
+                for (int l = i + 1; l < rows.length; l++) {
+                    rows[l]++;
                 }
                 break;
             }
