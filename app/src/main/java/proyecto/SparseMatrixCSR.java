@@ -230,8 +230,32 @@ public class SparseMatrixCSR {
      */
     public SparseMatrixCSR getTransposedMatrix() throws OperationNotSupportedException
     {
-        SparseMatrixCSR squaredMatrix = new SparseMatrixCSR();
-        throw new OperationNotSupportedException();
+        SparseMatrixCSR transposedMatrix = new SparseMatrixCSR();
+        // Se usa la matriz instanciada anteriormente para setear los valores
+        transposedMatrix.setValues(values);
+        transposedMatrix.setColumns(columns);
+
+        // Crea un nuevo arreglo, uno de filas para la matriz transpuesta
+        int[] transposedRows = new int[matrix[0].length + 1];
+
+        int rowI = 0; // Indices filas
+        int valueI = 0; // Indices valores
+        for (int j = 0; j < matrix[0].length; j++) {
+            transposedRows[rowI] = valueI;
+            for (int i = 0; i < matrix.length; i++) {
+                if (matrix[i][j] != 0) {
+                    values[valueI] = matrix[i][j];
+                    columns[valueI] = i;
+                    valueI++;
+                }
+            }
+            rowI++;
+        }
+        transposedRows[rowI] = valueI;
+
+        transposedMatrix.setRows(transposedRows);
+
+        return transposedMatrix;
     }
 
 }
