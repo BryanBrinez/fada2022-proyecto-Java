@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
+import java.util.ArrayList;
 
 import java.io.FileNotFoundException;
 
@@ -32,46 +33,50 @@ public class SparseMatrixCSR {
         numRows = matrix.length;
         numCols = matrix[0].length;
 
-        // Arreglo el cual almacena el numero de elementos no nulos por cada fila
-        int[] elementosNoNulos = new int[numRows];
+        //cantidad de datos que no son cero
+        int cantVal = 0;
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 if (matrix[i][j] != 0) {
-                    elementosNoNulos[i]++;
+                    cantVal++;
                 }
             }
         }
 
-        int[] val = new int[IntStream.of(elementosNoNulos).sum()];
+        int[] val = new int[cantVal];
         int[] col = new int[val.length];
         int[] fil = new int[numRows + 1];
 
-        // indice actual en valores y col
-        int index = 0;
+        // inidice actual
+        int pos = 0;
 
         for (int i = 0; i < numRows; i++) {
-            // Actualiza fil para indicar dónde comienza la fila actual
-            fil[i] = index;
+            //donde comienza la actual
+            fil[i] = pos;
             for (int j = 0; j < numCols; j++) {
                 if (matrix[i][j] != 0) {
-                    val[index] = matrix[i][j];
-                    col[index] = j;
-                    index++;
+                    val[pos] = matrix[i][j];
+                    col[pos] = j;
+                    pos++;
                 }
             }
         }
+        //donde fue la ultima que fue diferente a 0
+        fil[numRows] = pos;
 
-        fil[numRows] = index;
-
-        this.rows = fil;
-        this.columns = col;
-        this.values = val;
+        this.setRows(fil);
+        this.setColumns(col);
+        this.setValues(val);
 
     }
 
     public int getElement(int i, int j) throws OperationNotSupportedException {
+
+        //limites
         int inicio = rows[i];
         int fin = rows[i + 1] - 1;
+
+        //al saber los limites se recorre y si encuentra el valor lo mando, sino un 0
         for (int k = inicio; k <= fin; k++) {
             if (columns[k] == j) {
                 return values[k];
@@ -81,13 +86,19 @@ public class SparseMatrixCSR {
     }
 
     public int[] getRow(int fila) throws OperationNotSupportedException {
-
+        //num max de la cantidad
         int canCol = Arrays.stream(columns).max().getAsInt();
+
+        System.out.println(canCol);
         int row = rows[fila];
+
+
         int[] filaRetornada = new int[canCol + 1];
 
+        //rellena el array con ceros
         Arrays.fill(filaRetornada, 0);
 
+        //lo rellena con los datos que encuentra
         for (int i = row; i < rows[fila + 1]; i++) {
             filaRetornada[columns[i]] = values[i];
         }
@@ -95,11 +106,15 @@ public class SparseMatrixCSR {
     }
 
     public int[] getColumn(int j) throws OperationNotSupportedException {
+        //se le asigna tamaño
         int n = rows.length - 1;
         int[] column = new int[n];
+
+        //manda los datos que se ecuentra en la columna
         for (int i = 0; i < column.length; i++) {
             column[i] = getElement(i, j);
         }
+
         return column;
     }
 
@@ -200,10 +215,13 @@ public class SparseMatrixCSR {
     public SparseMatrixCSR getSquareMatrix() throws OperationNotSupportedException {
         SparseMatrixCSR squaredMatrix = new SparseMatrixCSR();
 
+
+        //se multiplica por si misma
         for (int i = 0; i < this.values.length; i++) {
             this.values[i] = this.values[i] * this.values[i];
         }
 
+        //se setean los valores
         squaredMatrix.setRows(this.rows);
         squaredMatrix.setColumns(this.columns);
         squaredMatrix.setValues(this.values);

@@ -30,24 +30,28 @@ public class SparseMatrixCoordinateFormat {
         //Load data
         loader.loadFile(inputFile);
         matrix = loader.getMatrix();
+
+
+        //Arrayslist para manejar mas facil los arrays
         ArrayList<Integer> valores = new ArrayList<Integer>();
         ArrayList<Integer> fil = new ArrayList<Integer>();
         ArrayList<Integer> col = new ArrayList<Integer>();
 
 
+        //tam de las filas
         tamFilas =matrix.length;
 
-        //sacar los values de
+        //recorrer la matrix
         for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                //tam de columnas
+                tamCol = matrix[0].length;
 
-            for (int j = 0; j < matrix[i].length; j++) {
-                tamCol = matrix[i].length;
-
+                //Comprueba si es diferente a 0 y los agrega al arraylist
                 if (matrix[i][j] != 0) {
                     valores.add(matrix[i][j]);
                     fil.add(i);
                     col.add(j);
-
                 }
             }
         }
@@ -56,68 +60,62 @@ public class SparseMatrixCoordinateFormat {
             System.out.print(elemento + "-");
         System.out.println();
 
-
-        for (Integer elemento : fil)
-            System.out.print(elemento + "-");
-        System.out.println();
-
-
-        for (Integer elemento : col)
-            System.out.print(elemento + "-");
-        System.out.println();
-
-
+        //Le da tamaño a los arrays resultantes
         values = new  int[valores.size()];
         rows = new  int[valores.size()];
         columns = new  int[valores.size()];
+
+
+        //Pasa de los arraylist a los arrays resultados
         for (int i = 0; i < values.length; i++){
             values[i] = valores.get(i);
 
             rows[i] = fil.get(i);
 
             columns[i] = col.get(i);
-            //System.out.println(values[i]);
 
         }
 
     }
 
+
+
     public int getElement(int fila, int columna) throws OperationNotSupportedException {
         //No usar this.matrix aqui.
-        boolean dato = false;
 
+
+        //Recorre las filas
         for (int i = 0; i < rows.length; i++){
+            //Comprueba si son iguales a la busqueda
             if(this.rows[i] == fila && this.columns[i] == columna){
-                dato = true;
                return this.values[i];
             }
         }
-        if(dato==false){
-            return 0;
-        }
-
-        throw new OperationNotSupportedException();
+        //sino retorna 0
+        return 0;
     }
 
     public int[] getRow(int fila) throws OperationNotSupportedException {
         //No usar this.matrix aqui.
 
         ArrayList<Integer> filas = new ArrayList<Integer>();
-        ArrayList<Integer> res = new ArrayList<Integer>(tamCol);
+        ArrayList<Integer> res = new ArrayList<Integer>();
 
+        //Crea un array de ceros
         int resul[] = new int[tamCol];
-
         for (int i = 0; i < resul.length; i++){
             resul[i] = 0;
         }
 
+        //guarda las posiciones de la columna donde row sea igual a la fila
         for (int i = 0; i < rows.length; i++){
             if(this.rows[i] == fila){
                 filas.add(this.columns[i]);
             }
         }
 
-        for (int i = 0; i < tamCol; i++){
+        //guarda el elemento donde la posicion de su columna sea igual al recorrido
+        for (int i = 0; i < resul.length; i++){
             for (Integer elemento : filas){
                 if(i == elemento){
                     resul[i] = this.getElement(fila,elemento);
@@ -134,18 +132,21 @@ public class SparseMatrixCoordinateFormat {
         ArrayList<Integer> columnas = new ArrayList<Integer>();
         ArrayList<Integer> res = new ArrayList<Integer>(8);
 
-        int resul[] = new int[tamFilas];
 
+        //Crea un array de ceros
+        int resul[] = new int[tamFilas];
         for (int i = 0; i < resul.length; i++){
             resul[i] = 0;
         }
 
+        //guarda las posiciones de la fila donde row sea igual a la columna
         for (int i = 0; i < rows.length; i++){
             if(columns[i] == columna){
                 columnas.add(this.rows[i]);
             }
         }
 
+        //guarda el elemento donde la posicion de su fila sea igual al recorrido
         for (int i = 0; i < resul.length; i++){
             for (Integer elemento : columnas){
                 if(i == elemento){
@@ -174,10 +175,12 @@ public class SparseMatrixCoordinateFormat {
         //Usar los metodos Set aqui de los atributos
 
 
+        //multiplica por si mismo cada elemento del array values
         for (int i = 0; i < this.rows.length; i++) {
             this.values[i] = this.values[i] * this.values[i];
         }
 
+        //setea los arrays
         squaredMatrix.setRows(this.rows);
         squaredMatrix.setColumns(this.columns);
         squaredMatrix.setValues(this.values);
@@ -191,45 +194,38 @@ public class SparseMatrixCoordinateFormat {
     public SparseMatrixCoordinateFormat getTransposedMatrix() throws OperationNotSupportedException {
         SparseMatrixCoordinateFormat squaredMatrix = new SparseMatrixCoordinateFormat();
 
-        int[][] newmat = new int[matrix[0].length][matrix.length];
+        int[][] nMatrix = new int[matrix[0].length][matrix.length];
 
+        //se ponen las columnas en la filas y las filas en las columnas
         for (int j = 0; j < matrix[0].length; j++) {
             for (int i = 0; i < matrix.length; i++) {
-                newmat[j][i] = matrix[i][j];
+                nMatrix[j][i] = matrix[i][j];
             }
         }
-        squaredMatrix.setMatrix(newmat);
+        squaredMatrix.setMatrix(nMatrix);
 
-        // Contamos el número de elementos no nulos en la matriz transpuesta
-        int numNonZeroElements = 0;
-        for (int[] filas : newmat) {
-            for (int elemento : filas) {
-                if (elemento != 0) {
-                    numNonZeroElements++;
-                }
-            }
-        }
 
         // Creamos los arrays con las capacidades correspondientes
-        int[] nuevasfilas = new int[numNonZeroElements];
-        int[] nuevasColumnas = new int[numNonZeroElements];
-        int[] nuevosValores = new int[numNonZeroElements];
+        int[] nFilas = new int[this.values.length];
+        int[] nCol = new int[this.values.length];
+        int[] nVal = new int[this.values.length];
 
-        // Rellenamos los arrays con los datos de la matriz transpuesta
+        // se llenan los arrays con los nuevos datos
         int index = 0;
-        for (int i = 0; i < newmat.length; i++) {
-            for (int j = 0; j < newmat[0].length; j++) {
-                if (newmat[i][j] != 0) {
-                    nuevasfilas[index] = i;
-                    nuevasColumnas[index] = j;
-                    nuevosValores[index] = newmat[i][j];
+        for (int i = 0; i < nMatrix.length; i++) {
+            for (int j = 0; j < nMatrix[0].length; j++) {
+                if (nMatrix[i][j] != 0) {
+                    nFilas[index] = i;
+                    nCol[index] = j;
+                    nVal[index] = nMatrix[i][j];
                     index++;
                 }
             }
         }
-        squaredMatrix.setRows(nuevasfilas);
-        squaredMatrix.setColumns(nuevasColumnas);
-        squaredMatrix.setValues(nuevosValores);
+
+        squaredMatrix.setRows(nFilas);
+        squaredMatrix.setColumns(nCol);
+        squaredMatrix.setValues(nVal);
 
         return squaredMatrix;
     }

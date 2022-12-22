@@ -32,7 +32,7 @@ class SparseMatrixCSCTest {
         assertTrue(Arrays.equals(values, instance.getValues()));
 
         //Test 1
-        instance.createRepresentation(file1);
+       instance.createRepresentation(file1);
         int rowsA[] = {0, 1, 2, 4, 0, 2, 3, 4, 2, 4};
         int colsA[] = {0, 0, 4, 8, 8, 8, 9, 9, 10};
         int valuesA[] = {1, 1, 1, 1, 4, 2, 3, 4, 8, 9};
